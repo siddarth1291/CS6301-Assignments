@@ -5,4 +5,4 @@ This repository contains the documents for Assignment 1. The PDF titled Assignme
 The Excel sheet contains the distribution of all the terms contained in the corpus. 
 
 
-UPDATE: Assignment 1 has its own directory now. Files associated with Assingment 1 have been added here. Assignment 2 directory has been added for Assignment 2.
+UPDATE: Assignment 1 has its own directory now. Files associated with Assignment 1 have been moved here. Assignment 2 directory has been added for Assignment 2.
