@@ -1,0 +1,157 @@
+<>xml version="1.0" encoding="UTD-8"?>
+<bug_reports>
+	<bug_report id ="53822">
+		<title>performance of IdentityStack.containsAll()</title>
+		<description>
+			"IdentityStack.containsAll(Collection coll)" has a similar performanceproblem as the previously fixed Bug 53622 (for"VectorSet.retainAll(Collection coll)").  The problem is that "containsAll(Collection coll)" performs "this.contains(e.next())", which is slow because "this" is an IdentityStack, i.e., a Vector, and therefore "contains" is linear.
+
+			I attached a patch (patchSmall.diff) similar to the one used by Jesse Glick in Bug 53622.  I attached an improved patch (patchFull.diff) that builds the IdentityHashMap lazily, which gives slightly better performance than patchSmall.diff (which builds IdentityHashMap eagerly).  I also attached a test that exposes this problem.  For this test, patchSmall.diff provides a 676X speedup on my machine.
+
+			To run the test, just do:
+
+			$ java Test
+
+			The output for the un-patched version is:
+			Time is 17572
+	
+			The output for the patched version is:
+			Time is 26
+		</description>
+		<change_set>
+			<system_revision>1380262</system_revision>
+			<modified_methods>
+
+				<method id="IdentityStack.containsAll">
+					<signature>public synchronized boolean containsAll(Collection<?> c)</signature>
+					<file>ant-master/src/main/org/apache/tools/ant/util/IdentityStack.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+
+	<bug_report id ="54147">
+		<title> Creation of the test report (xml, plain) ends with a java.lang.OutOfMemoryError exception</title>
+		<description>
+			Our Unit Test contains keeps failing with java.lang.OutOfMemory exception when the test results are written into the XML/text file.
+			First problem was solved by applying the patch from patch from the https://issues.apache.org/bugzilla/show_bug.cgi?id=45536.
+
+			But it still does not helped, and the exception is still thrown:
+
+			[epos junit] Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
+			[epos junit]  at java.lang.StringCoding$StringDecoder.decode(StringCoding.java:133)
+			[epos junit]  at java.lang.StringCoding.decode(StringCoding.java:173)
+			[epos junit]  at java.lang.StringCoding.decode(StringCoding.java:185)
+			[epos junit]  at java.lang.String.<init>(String.java:570)			
+			[epos junit]  at java.lang.String.<init>(String.java:593)
+			[epos junit]  at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.run(JUnitTestRunner.java:547)
+			[epos junit]  at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.launch(JUnitTestRunner.java:1052)
+			[epos junit]  at org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner.main(JUnitTestRunner.java:906)
+
+			After a short investigation I have found, that the problem lies in the conversion of the DOM representation into the XML/Text file, caused by multiple allocation of the memory for storing of the string data of the CDATA element.
+
+			I have skipped the copy of the CDATA into the memory, the data will be written directly into the output stream, instead (see the attached patch).
+		</description>
+		<change_set>
+			<system_revision></system_revision>
+			<modified_methods>
+
+				<method id="DOMElementWriter.encodedata">
+					<signature>public String encodedata(final String value)</signature>
+					<file>ant-master/src.orig/main/org/apache/tools/ant/util/DOMElementWriter.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+		<bug_report id ="54151">
+		<title>wasted work in FailureRecorder.setProject()</title>
+		<description>
+			The problem appears in version 1.8.4 and in revision 1409946.  I attached a one-line patch that fixes it.
+
+			In method "FailureRecorder.setProject", the loop over "allListeners" should call "break" (not "continue", as it does currently) immediately after "alreadyRegistered" is set to "true".  All the iterations after "alreadyRegistered" is set to "true" do not perform any useful work, at best they just set "alreadyRegistered" again to "true".
+			
+		</description>
+		<change_set>
+			<system_revision>1409946</system_revision>
+			<modified_methods>
+
+				<method id="FailureRecorder.setProject">
+					<signature>public void setProject(Project project)</signature>
+					<file>ant-master/src/main/org/apache/tools/ant/taskdefs/optional/junit/FailureRecorder.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="53637">
+		<title>performance problem in VectorSet.allAll()</title>
+		<description>
+			There is a performance problem in VectorSet.allAll().  It appears in version 1.8.4 and also in revision 1367821.  I attached a test that exposes this problem and a patch that fixes it.  On my machine, the patch provides a 20X speedup for this test.
+
+			To run the test, just do:
+
+			$ java Test
+
+			The output for the un-patched version is:
+			Time is 439
+
+			The output for the patched version is:
+			Time is 22
+
+			The current implementation of "VectorSet.addAll(int index, Collection c)" adds the elements of "c" one by one at "index" in the "elementData" array.  These add operations are slow, because each of them requires shifting to the right all the elements after "index". The attached patch adds all the elements at once, and thus performs a single shift.
+
+			The java.util.ArrayList "addAll(int index, Collection<? extends E> c)" implementation also performs a single shift (like the patch), and does not insert the elements one by one.
+		</description>
+		<change_set>
+			<system_revision>1367821</system_revision>
+			<modified_methods>
+
+				<method id=VectorSet.addAll">
+					<signature>public synchronized boolean addAll(int index, Collection c)</signature>
+					<file>ant-master/src/main/org/apache/tools/ant/util/VectorSet.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="54128">
+		<title>Ant 1.8 exec task changes have slowed exec to a crawl</title>
+		<description>
+			Changes made between ant 1.7 and ant 1.8 slowed the exec task to a crawl.
+
+			The reason is that it changed blocking I/O to to polled I/O with a period of 100 ms.  In effect any task that completes inside of the 100 ms window will have to wait for the sleep(100) call to finish at which point the non-blocking read call realizes it has exhausted all data and actually exits.
+
+			The correct approach is to go back to blocking reads but upon detection of process termination follow a few simple steps:
+
+			1. Use non-blocking available() call on the input ends of the subprocess's stdout,stderr streams and spin w/ 100 ms sleep until no bytes are available.  You can be certain this will exhaust all output because it runs after it is known that the subprocess has already exited.
+			2. Call destroy() on the process object.  This closes the input streams which has the effect of unblocking the blocked read calls.
+			3. Continue with the rest of the original code which is to stop the stream handler which joins the reading threads.  Because the read calls have been unblocked and exhausted all input the join will complete immediately in all cases.
+
+			This has been tested on OS X 10.8 Mountain Lion and it restores the exec task speed back to ant 1.7 series levels (i.e. 20 seconds to run our exec-heavy build task instead of 2-3 minutes).
+
+			It will obviously require testing on the Windows platform where the original Bug 5003 was reported to verify it didn't regress that bug fix.
+		</description>
+		<change_set>
+			<system_revision></system_revision>
+			<modified_methods>
+
+				<method id="PumpStreamHandler.finish">
+					<signature>protected final void finish(Thread t)</signature>
+					<file>ant-master/src/main/org/apache/tools/ant/taskdefs/PumpStreamHandler.java</file>
+				</method>
+
+				<method id="StreamPumper.run">
+					<signature>public void run()</signature>
+					<file>ant-master/src/main/org/apache/tools/ant/taskdefs/StreamPumper.java</file>
+				</method>
+				
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+</bug_reports>
