@@ -2,16 +2,18 @@ This repository contains the documents for Assignment 2. The Repository contains
 
 <B>DELIVERABLES:</B>
 
-• Eclipse JDT/Core
+<B>• Eclipse JDT/Core</B>
+
  a. Git repository: https://github.com/eclipse/eclipse.jdt.core
 
  b. Bug tracker: https://bugs.eclipse.org/bugs/buglist.cgi?product=JDT
+  
+    * With respect to the Eclipse Repository provided in the assignment, the following files are present:
+       * Assignment 2 Bug Report Eclipse.xlsx
+       * Eclipse GoldSet.xml
 
-  * With respect to the Eclipse Repository provided in the assignment, the following files are present:
-      * Assignment 2 Bug Report Eclipse.xlsx
-      * Eclipse GoldSet.xml
+<B>Apache Ant</B>
 
-Apache Ant
  a. Git repository: https://github.com/apache/ant
  
  b. Bug tracker: https://bz.apache.org/bugzilla/buglist.cgi?product=Ant
@@ -20,7 +22,8 @@ Apache Ant
       * Assignment 2 Bug Report ANT.xlsx
       * ANT GoldSet.xml
 
-Apache Tomcat
+<B>Apache Tomcat</B>
+
  a. Git repository: https://github.com/apache/tomcat
  
  b. Bug trackers: https://bz.apache.org/bugzilla/buglist.cgi?product=Tomcat%20X (where X is the version: 3, 4, 5, 6, 7, 8 or 9)
