@@ -1,6 +1,18 @@
 This repository contains the documents for Assignment 2. The Repository contains the following files:
 
 <B>DELIVERABLES:</B>
+Apart from the above deliverables, the following are also added:
+
+Precision and recall @{5,10,20}, and effectiveness for each query of each system
+
+• Average and median precision and recall @{5,10,20}, and effectiveness for each system
+
+• Average and median precision and recall @{5,10,20}, and effectiveness for all the systems (i.e., across systems)
+
+• Comparison of precision, recall, and effectiveness between the three types of queries, defined in step 3.a.
+
+
+<B>OTHER DELIVERABLES:</B>
 
 <B>• Eclipse JDT/Core</B>
 
@@ -31,15 +43,3 @@ This repository contains the documents for Assignment 2. The Repository contains
     * With respect to the Apache TomCat Repository provided in the assignment, the following files are present:
       * Assignment 2 Bug Report Tomcat.xlsx
       * Tomcat GoldSet.xml
-
-
-<B>OTHER DELIVERABLES:</B>
-Apart from the above deliverables, the following are also added:
-
-Precision and recall @{5,10,20}, and effectiveness for each query of each system
-
-• Average and median precision and recall @{5,10,20}, and effectiveness for each system
-
-• Average and median precision and recall @{5,10,20}, and effectiveness for all the systems (i.e., across systems)
-
-• Comparison of precision, recall, and effectiveness between the three types of queries, defined in step 3.a.
