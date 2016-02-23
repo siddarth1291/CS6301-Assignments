@@ -1,7 +1,6 @@
 This repository contains the documents for Assignment 2. The Repository contains the following files:
 
 <B>DELIVERABLES:</B>
-Apart from the above deliverables, the following are also added:
 
 Precision and recall @{5,10,20}, and effectiveness for each query of each system
 
