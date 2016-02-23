@@ -1,0 +1,198 @@
+<>xml version="1.0" encoding="UTD-8"?>
+<bug_reports>
+	<bug_report id ="58988">
+		<title> $ escaping for rewrite</title>
+		<description>
+			Let backslashes escape characters
+
+			This will enable escaping (quoting) by using an backslash.
+
+			Apart from this, it will enable escaping the percent sign by using %%. It also fixes a bug, when % was not followed by a digit or a curly brace.
+
+			The functionality for %% should probably not be added.
+		</description>
+		<change_set>
+			<system_revision>Tomcat 9</system_revision>
+			<modified_methods>
+
+				<method id="Substitution.parse">
+					<signature>public void parse(Map<String, RewriteMap> maps)</signature>
+					<file>java/org/apache/catalina/valves/rewrite/Substitution.java</file>
+				</method>
+				
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+
+	<bug_report id ="58581">
+		<title> StandardHostValve#custom throws NPE if custom error page is incorrectly configured</title>
+		<description>
+			"Minimal files to reproduce this issue:
+1) create a directory named test and deploy it under webapps
+test
+├── WEB-INF
+│   └── web.xml
+├── error.html
+└── test.html
+
+the web.xml is as follows:
+
+<?xml version=""1.0"" encoding=""UTF-8""?>
+<web-app version=""3.0"">
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/test.html</url-pattern>
+    </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error.html</location>
+    </error-page>
+</web-app>
+2 ) start tomcat and visit http://localhost:8080/test/abc.html
+
+The exception is thrown as follows:
+
+04-Nov-2015 22:24:04.984 SEVERE [http-nio-8080-exec-1] org.apache.catalina.core.StandardHostValve.custom Exception Processing                      ErrorPage[errorCode=404, location=/error.html]
+ java.lang.NullPointerException
+    at org.apache.catalina.core.StandardHostValve.custom(StandardHostValve.java:391)
+    at org.apache.catalina.core.StandardHostValve.status(StandardHostValve.java:257)
+    at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:180)
+    at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:79)
+    at org.apache.catalina.valves.AbstractAccessLogValve.invoke(AbstractAccessLogValve.java:616)
+    at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:87)
+    at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:361)
+    at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:1057)
+    at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:75)
+    at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:737)
+    at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.run(NioEndpoint.java:1531)
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+    at java.lang.Thread.run(Thread.java:745)The exception is not user-friendly, and somehow misleading. From the stack trace, user is likely to consider it as a tomcat bug. 
+
+The solution might be adding url-pattern /error.html to the default servlet, or just change the url-pattern to match all the html resources.
+
+My suggestion is to avoid such NPE and tell user what to do.
+
+I have attached a proposed fix against trunk.
+
+		</description>
+		<change_set>
+			<system_revision> Tomcat 9</system_revision>
+			<modified_methods>
+
+				<method id="StandardHostValve.custom">
+					<signature>private boolean custom(Request request, Response response,
+                             ErrorPage errorPage)</signature>
+					<file>java/org/apache/catalina/core/StandardHostValve.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+		<bug_report id ="34319">
+		<title>StoreBase.processExpires() is very inefficient</title>
+		<description>
+			Using a session store such as JDBCStore with the default configuration 
+(Engine.backgroundProcessorDelay=10 and StandardManager.processExpiresFrequency=6), 
+StoreBase.processExpires() will wake up once a minute and load all stored sessions into memory.   So, with the default 30-minute session-timeout setting, this means we are loading up to 29 minutes worth of sessions that won't be ready to expire.   In this example we load 30x more sessions than we actually need to. 
+
+Since the purpose of StoreBase.processExpires() is to find sessions that are ready to be expired, it doesn't make sense to load ALL session for cases where we could pre-filter sessions BEFORE loading them.   For example, JDBCStore could use a where clause to reduce the number of sessions loaded as candidates to be expired and FileStore could query the filesystem for the age of the files before loading.    
+The current behavior could be the worst-case fallback for Stores in which it is not possible to get age information.
+
+I propose that StoreBase.processExpires() be refactored to load only keys of old sessions when possible by providing an oldKeys() method that may be overriden.   By default this would just return all keys but it should be easy to extend this in specialized versions (I will provide a sample patch to illustrate for JDBCStore).
+		</description>
+		<change_set>
+			<system_revision>Tomcat 9</system_revision>
+			<modified_methods>
+
+				<method id="JDBCStore.processExpires">
+					<signature>public void processExpires</signature>
+					<file>JDBCStore.java </file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="58342">
+		<title>org.apache.tomcat.websocket.WsSession has repeated conditional tests()</title>
+		<description>
+			In the method WsSession.removeMessageHandler(), two `if` statements have repeated conditional tests. I did not investigate whether older versions of Tomcat have it however they're present in trunk. I am attaching a patch to fix it. I ran the tests and they passed with my changes.
+		</description>
+		<change_set>
+			<system_revision>Tomcat 9</system_revision>
+			<modified_methods>
+
+				<method id=WsSession.removeMessageHandler">
+					<signature>public void removeMessageHandler(MessageHandler listener)</signature>
+					<file>/java/org/apache/tomcat/websocket/WsSession.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="57715">
+		<title>Finding security constraints can fail when HTTP methods are specified</title>
+		<description>
+			Finding security constraints can fail when HTTP methods are specified.  When HTTP methods are defined in the security constraints, the RealmBase.findSecurityConstraints() method can terminate early without adding a constraint to the results.
+
+A simple case that demonstrates this problem is to define security constraints such that the entire web site requires authentication.  Then add one additional constraint that allows the GET HTTP method for a specific URL to bypass authentication:
+
+    <!-- Restricted URLs that require authentication -->
+    <security-constraint>
+        <display-name>Authenticated Access</display-name>
+        <web-resource-collection>
+        <web-resource-name>Restricted Access</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <!-- <auth-constraint> with the * role enforces authentication but not authorization -->
+            <role-name>*</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <!-- URLs that do not require authentication -->
+    <security-constraint>
+        <display-name>Unauthenticated Public Access</display-name>
+        <web-resource-collection>
+            <!-- Public SOAP wsdl resources -->
+            <web-resource-name>PublicSOAPWsdlURLs</web-resource-name>
+            <url-pattern>/services/*</url-pattern>
+            <!-- SOAP wsdl requests use GET and are public. POST requests to these URLs require authentication -->
+            <http-method>GET</http-method>
+        </web-resource-collection>
+        <!-- No <auth-constraint> because these resources do not require authentication -->
+    </security-constraint>
+
+If an HTTP POST request is sent to the /service/foo uri, the findSecurityConstraints() method matches the ‘/service/*’ URL and flags the search status as having found a match. However, when the HTTP method is examined it is found not to match and the security constraint is not added to the results. Even though the HTTP method didn’t match, the search was still flagged as finding a match and the search is terminated, returning zero constraints. This allows the POST request to proceed without authentication.
+
+A patch is attached that includes a unit test to demonstrate the problem and a fix to the RealmBase.
+			</description>
+		<change_set>
+			<system_revision>Tomcat 9</system_revision>
+			<modified_methods>
+
+				<method id="RealmBase.hasResourcePermission">
+					<signature>public boolean hasResourcePermission(Request request,
+                                         Response response,
+                                         SecurityConstraint []constraints,
+                                         Context context)</signature>
+					<file>java/org/apache/catalina/realm/RealmBase.java</file>
+				</method>
+				
+				<method id="RealmBase.findSecurityConstraints">
+					<signature>public SecurityConstraint [] findSecurityConstraints(Request request,
+                                                         Context context)</signature>
+					<file>java/org/apache/catalina/realm/RealmBase.java</file>
+				</method>
+				
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+</bug_reports>
