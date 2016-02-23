@@ -1,0 +1,149 @@
+<>xml version="1.0" encoding="UTD-8"?>
+<bug_reports>
+	<bug_report id ="482228">
+		<title>[1.8][null] detect incompatible null constraints on type parameter of overriding method</title>
+		<description>We are not detecting incompatibility re null constraints in situations</description>
+		<change_set>
+			<system_revision>158f15e</system_revision>
+			<modified_methods>
+
+				<method id="CompilerInvocationTests.test011_problem_categories">
+					<signature>void test011_problem_categories()</signature>
+					<file>org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/CompilerInvocationTests.java</file>
+				</method>
+
+				<method id="CompilerInvocationTests.test012_compiler_problems_tuning">
+					<signature>void test012_compiler_problems_tuning()</signature>
+					<file>org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/CompilerInvocationTests.java</file>
+				</method>
+
+				<method id="IProblem.setSourceStart">
+					<signature>void setSourceStart(int sourceStart)</signature>
+					<file>org.eclipse.jdt.core/compiler/org/eclipse/jdt/core/compiler/IProblem.java</file>
+				</method>
+
+				<method id="ProblemReporter.getIrritant">
+					<signature>int getIrritant(int problemID)</signature>
+					<file>org.eclipse.jdt.core/compiler/org/eclipse/jdt/internal/compiler/problem/ProblemReporter.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+
+	<bug_report id ="474629">
+		<title>[save actions][clean up] AIOOBE in TokenManager.get(TokenManager.java:68)</title>
+		<description>Save action "Use parentheses in expressions: Only when necessary" always causes a crash of this feature (as long as the source file contains parentheses), and skips subsequent save actions.</description>
+		<change_set>
+			<system_revision>32a3c84</system_revision>
+			<modified_methods>
+
+				<method id="CompilerInvocationTests.test011_problem_categories">
+					<signature>void test011_problem_categories()</signature>
+					<file>org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/CompilerInvocationTests.java</file>
+				</method>
+
+				<method id="CompilerInvocationTests.test012_compiler_problems_tuning">
+					<signature>void test012_compiler_problems_tuning()</signature>
+					<file>org.eclipse.jdt.core.tests.compiler/src/org/eclipse/jdt/core/tests/compiler/regression/CompilerInvocationTests.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+		<bug_report id ="483650">
+		<title>[search]open Method - new api with unified qualifier</title>
+		<description>For the ease of use with jdt.ui, a new api  where qualifier is a combination of package name, enclosing type name and type name for searchAllMethodNames.</description>
+		<change_set>
+			<system_revision>6dbe281</system_revision>
+			<modified_methods>
+
+				<method id="AbstractJavaSearchTests.SearchAllMethodNames">
+					<signature>searchAllMethodNames(String pattern, int matchRule, 
+  						IJavaSearchScope scope, IRestrictedAccessMethodRequestor requestor)</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/AbstractJavaSearchTests.java</file>
+				</method>
+
+				<method id="JavaSearchBugsTests.testBug483650_wScope_0001">
+					<signature>public void testBug483650_wScope_0001()</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java</file>
+				</method>
+
+				<method id="JavaSearchBugsTests.testBug483650_wScope_0002">
+					<signature>public void testBug483650_wScope_0002</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests.java</file>
+				</method>
+
+				<method id="JavaSearchBugsTests2.testBug483650_0001()">
+					<signature>public void testBug483650_0001()</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests2.java</file>
+				</method>
+
+				<method id="JavaSearchBugsTests2.testBug483650_0002()">
+					<signature>public void testBug483650_0002()</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/model/JavaSearchBugsTests2.java</file>
+				</method>
+
+				<method id="CharOperation.concat(char[] first, char[] second)">
+					<signature>static final char[] concat(char[] first, char[] second)</signature>
+					<file>org.eclipse.jdt.core/compiler/org/eclipse/jdt/core/compiler/CharOperation.java</file>
+				</method>
+
+				<method id="BasicSearchEngine.match">
+					<signature>boolean match(char[] patternName, int matchRule, char[] name)</signature>
+					<file>org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/BasicSearchEngine.java</file>
+				</method>
+
+
+				<method id="MethodDeclarationPattern.MethodDeclarationPattern">
+					<signature>MethodDeclarationPattern(char[] declaringQualifier, 
+   						char[] methodName, int matchRule)</signature>
+					<file>org.eclipse.jdt.core/search/org/eclipse/jdt/internal/core/search/matching/MethodDeclarationPattern.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="483509">
+		<title> [search] New API SearchEngine.createMethodNameMatch(IMethod, int)</title>
+		<description>New API "SearchEngine.createMethodNameMatch(IMethod, int)" (similar to SearchEngine#createTypeNameMatch) is required to maintain the history of Open Method dialog.
+		</description>
+		<change_set>
+			<system_revision>9892e22</system_revision>
+			<modified_methods>
+
+				<method id="SearchEngine.createMethodNameMatch">
+					<signature>MethodNameMatch createMethodNameMatch(IMethod method, int modifiers)</signature>
+					<file>org.eclipse.jdt.core/search/org/eclipse/jdt/core/search/SearchEngine.java</file>
+				</method>
+
+				<method id="BasicSearchEngine.createMethodNameMatch">
+					<signature>MethodNameMatch createMethodNameMatch(IMethod method, int modifiers)</signature>
+					<file>org.eclipse.jdt.core/search/org/eclipse/jdt/core/search/BasicSearchEngine.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+	<bug_report id ="487375">
+		<title> [formatter] block comment in front of method signature effects too much indentation </title>
+		<description>The code formatter wrongly indents a method declaration (including Javadoc) by two tabs when the method signature starts with a block comment.
+		</description>
+		<change_set>
+			<system_revision>e2fc6e7</system_revision>
+			<modified_methods>
+
+				<method id="FormatterBugsTests.testBug485276()">
+					<signature>void testBug487375()</signature>
+					<file>org.eclipse.jdt.core.tests.model/src/org/eclipse/jdt/core/tests/formatter/FormatterBugsTests.java</file>
+				</method>
+
+			</modified_methods>
+		</change_set>
+	</bug_report>
+
+</bug_reports>
