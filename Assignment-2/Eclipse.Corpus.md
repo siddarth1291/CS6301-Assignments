@@ -1,4 +1,5 @@
 _____10 most frequent term in corpus
+
 type=8259
 java=6409
 search=5771
@@ -31,6 +32,8 @@ bugs=1515
 formatter=1512
  
 _____10 term with highest document frequency
+
+
 the appears in 19 files:
 under appears in 19 files:
 made appears in 19 files:
@@ -63,11 +66,15 @@ with appears in 19 files:
 program appears in 19 files:
  
 _____3 documents with highest unique terms
+
+
 C:\Users\Rajat\Desktop\Run Lexical Here\474629\FormatterBugsTests.java has 2579 unique terms.
 C:\Users\Rajat\Desktop\Run Lexical Here\483650\JavaSearchBugsTests.java has 3025 unique terms.
 C:\Users\Rajat\Desktop\Run Lexical Here\487375\FormatterBugsTests.java has 2579 unique terms.
  
 _____3 documents with lowest unique terms
+
+
 C:\Users\Rajat\Desktop\Run Lexical Here\482228\ImplicitNullAnnotationVerifier.java has 478 unique terms.
 C:\Users\Rajat\Desktop\Run Lexical Here\483650\MethodDeclarationPattern.java has 188 unique terms.
 C:\Users\Rajat\Desktop\Run Lexical Here\483650\WorkingCopySearchTests.java has 256 unique terms.
