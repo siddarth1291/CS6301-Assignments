@@ -11,7 +11,11 @@ public class XMLParser {
     {
         try
         {
-            File inputFile = new File("Cordova.xml"); //Enter File Name here.
+            File inputFile = new File("Cordova.xml"); //Enter File Name here. 
+            /*
+            	Hardcoded file names to be exact. This Parser just extracts the necessary node values such as title and 
+            	description from each XML file and this allows us to create the corpus.
+            */
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.parse(inputFile);
