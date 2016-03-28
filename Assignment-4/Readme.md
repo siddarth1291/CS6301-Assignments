@@ -1,1 +1,1 @@
-This is the repossitory for Assignment 4. Deliverables were uploaded on 03/27/2016.
+This is the repository for Assignment 4. Deliverables were uploaded on 03/27/2016.
